@@ -16,18 +16,18 @@ return new class extends Migration
             $table->longText('message')->nullable();
             $table->foreignId('sender_id')->constrained('users');
             $table->foreignId('receiver_id')->nullable()->constrained('users');
-            $table->foreignId('group_id')->nullable()->constrained('users');
+            $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->foreignId('conversation_id')->nullable()->constrained('conversations');
             $table->timestamps();
         });
 
 
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::table('groups', function (Blueprint $table) {
             $table->foreignId('last_message_id')->nullable()->constrained('messages');
         });
 
-        Schema::create('conversations', function (Blueprint $table) {
-            $table->foreignId('last_message_id')->nullable()->constrained('conversations');
+        Schema::table('conversations', function (Blueprint $table) {
+            $table->foreignId('last_message_id')->nullable()->constrained('messages');
         });
     }
 
