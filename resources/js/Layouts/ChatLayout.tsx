@@ -62,7 +62,7 @@ const ChatLayout = ({ children }: Props) => {
     }, [localConversations]);
 
     useEffect(() => {
-        setLocalConversations(localConversations);
+        setLocalConversations(conversations);
     }, [conversations]);
 
     useEffect(() => {
