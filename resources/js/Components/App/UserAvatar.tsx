@@ -10,7 +10,7 @@ const UserAvatar = ({ user, online, profile }: Props) => {
     const onlineClass =
         online() == true ? "online" : online() == false ? "offline" : "";
 
-    const sizeClass = profile ? "w-40" : "w-10";
+    const sizeClass = profile ? "w-40" : "w-9";
 
     return (
         <>
