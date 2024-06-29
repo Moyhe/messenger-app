@@ -55,7 +55,6 @@ class Group extends Model
         return $query->get();
     }
 
-
     public function toConversationArray()
     {
         return [

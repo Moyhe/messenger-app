@@ -1,10 +1,10 @@
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
-import { PageProps } from "@/types";
 
-export default function Home({ auth }: PageProps) {
+export default function Home() {
     return (
-        <ChatLayout user={auth.user}>
-            <div> Messages </div>
-        </ChatLayout>
+        <AuthenticatedLayout>
+            <ChatLayout>messages</ChatLayout>
+        </AuthenticatedLayout>
     );
 }
