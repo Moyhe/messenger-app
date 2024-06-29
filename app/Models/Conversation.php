@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,5 +51,28 @@ class Conversation extends Model
         })->concat($groups->map(function (Group $group) {
             return $group->toConversationArray();
         }));
+    }
+
+    public static function updateConversationWithMessage($user_id1, $user_id2, $message)
+    {
+        $conversations = Conversation::query()->where([
+            ['user_id1', $user_id1],
+            ['user_id2', $user_id2]
+        ])->orWhere(function (Builder $query) use ($user_id1, $user_id2) {
+            $query->where([
+                ['user_id1', $user_id2],
+                ['user_id2', $user_id1]
+            ]);
+        })->firstOrFail();
+
+        if ($conversations) {
+            Conversation::update(['last_message_id' => $message->id]);
+        }
+
+        Conversation::create([
+            'user_id1' => $user_id1,
+            'user_id2' => $user_id2,
+            'last_message_id' => $message->id
+        ]);
     }
 }
