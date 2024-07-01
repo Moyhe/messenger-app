@@ -116,7 +116,7 @@ const ChatLayout = ({ children }: Props) => {
                                 key={`${
                                     conversation.is_group ? "group_" : "user_"
                                 }${conversation.id}`}
-                                online={() => !!isUserOnline(conversation.id)}
+                                online={!!isUserOnline(conversation.id)}
                                 conversations={conversation}
                             />
                         ))}

@@ -11,7 +11,7 @@ use App\Models\Message;
 use App\Models\MessageAttachment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-
+use Inertia\Inertia;
 
 class MessageController extends Controller
 {
@@ -32,7 +32,7 @@ class MessageController extends Controller
         })->latest()->paginate(10);
 
 
-        return inertia('Home', [
+        return Inertia::render('Home', [
             'selectedConversations' => $user->toConversationArray(),
             'messages' => MessageResource::collection($messages)
         ]);
@@ -44,7 +44,7 @@ class MessageController extends Controller
             ->latest()->paginate(10);
 
 
-        return inertia('Home', [
+        return Inertia::render('Home', [
             'selectedConversations' => $group->toConversationArray(),
             'messages' => MessageResource::collection($messages)
         ]);

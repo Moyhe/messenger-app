@@ -2,13 +2,13 @@ import { User } from "@/types";
 
 interface Props {
     user: User;
-    online: () => boolean;
-    profile: boolean;
+    online?: boolean;
+    profile?: boolean;
 }
 
 const UserAvatar = ({ user, online, profile }: Props) => {
     const onlineClass =
-        online() == true ? "online" : online() == false ? "offline" : "";
+        online == true ? "online" : online == false ? "offline" : "";
 
     const sizeClass = profile ? "w-40" : "w-9";
 

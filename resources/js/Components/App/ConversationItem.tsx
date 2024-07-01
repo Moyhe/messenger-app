@@ -6,7 +6,7 @@ import UserAvatar from "./UserAvatar";
 import UserOptionsDropdown from "./UserOptionsDropdown";
 
 interface Props {
-    online: () => boolean;
+    online?: boolean;
     conversations: UserGroup;
     // selectedConversations: UserGroup;
 }
