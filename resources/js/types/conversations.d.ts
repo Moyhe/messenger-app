@@ -14,7 +14,8 @@ interface Conversation {
 
 type UserGroup = User & Conversation;
 
-
-export type ConversationProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type ConversationProps<
+    T extends Record<string, unknown> = Record<string, unknown>
+> = T & {
     conversations: UserGroup[];
 };

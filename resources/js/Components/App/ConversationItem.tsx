@@ -68,7 +68,7 @@ export const ConversationItem = ({ online, conversations }: Props) => {
                         : "")
                 }
             >
-                <div className="flex  grid grid-flow-col justify-between items-center">
+                <div className="flex grid-flow-col justify-between items-center">
                     <h3 className="text-sm font-semibold truncate">
                         {conversations.name}
                     </h3>

@@ -1,4 +1,5 @@
 import ConversationHeader from "@/Components/App/ConversationHeader";
+import MessageInput from "@/Components/App/MessageInput";
 import MessageItem from "@/Components/App/MessageItem";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
@@ -19,10 +20,18 @@ export default function Home({ messages, selectedConversations }: Props) {
     console.log("-----------------------------");
     console.log("local messages", localMessages);
 
-    const ref = useRef<HTMLDivElement>(null);
+    const messageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setLocalMessages(messages ? messages.data : []);
+        setTimeout(() => {
+            if (messageRef.current) {
+                messageRef.current.scrollTop = messageRef.current.scrollHeight;
+            }
+        }, 10);
+    }, [selectedConversations]);
+
+    useEffect(() => {
+        setLocalMessages(messages ? messages.data.reverse() : []);
     }, [messages]);
 
     return (
@@ -42,7 +51,10 @@ export default function Home({ messages, selectedConversations }: Props) {
                         <ConversationHeader
                             selectedConversations={selectedConversations}
                         />
-                        <div ref={ref} className="flex-1 overflow-y-auto p-5">
+                        <div
+                            ref={messageRef}
+                            className="flex-1 overflow-y-auto p-5"
+                        >
                             {localMessages.length == 0 && (
                                 <div className="flex justify-center items-center h-full">
                                     <div className="text-lg text-slate-200">
@@ -63,7 +75,7 @@ export default function Home({ messages, selectedConversations }: Props) {
                             )}
                         </div>
 
-                        {/* <MessageInput conversation={selectedConversations} /> */}
+                        <MessageInput conversation={selectedConversations} />
                     </>
                 )}
             </ChatLayout>

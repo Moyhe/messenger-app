@@ -66,7 +66,7 @@ class Conversation extends Model
         })->firstOrFail();
 
         if ($conversations) {
-            Conversation::update(['last_message_id' => $message->id]);
+            Conversation::query()->update(['last_message_id' => $message->id]);
         }
 
         Conversation::create([

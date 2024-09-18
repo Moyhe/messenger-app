@@ -3,8 +3,9 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { PageProps } from "@/types";
+import { ConversationProps } from "@/types/conversations";
 import { Link, usePage } from "@inertiajs/react";
-import { PropsWithChildren, ReactNode, useState } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
 export default function Authenticated({
     header,
@@ -12,8 +13,24 @@ export default function Authenticated({
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
     const page = usePage<PageProps>().props;
+    const { conversations } = usePage<ConversationProps>().props;
     const user = page.auth.user;
+
+    // useEffect(() => {
+    //      conversations.forEach((conversation) => {
+    //         let channel = `message.group.${conversation.id}`
+
+    //         if (conversation.is_user) {
+    //              channel = `message.user.${[
+    //                 user.id, conversation.id
+    //              ].sort((a, b) => a - b).join("_") }`
+    //         }
+
+    //      });
+    // }, [conversations]);
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">

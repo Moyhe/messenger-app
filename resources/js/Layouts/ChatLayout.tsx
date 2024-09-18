@@ -5,7 +5,7 @@ import { User } from "@/types";
 import { ConversationProps, UserGroup } from "@/types/conversations";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import { usePage } from "@inertiajs/react";
-import { ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
 interface Props {
     children: ReactNode;
@@ -25,8 +25,8 @@ const ChatLayout = ({ children }: Props) => {
 
     const isUserOnline = (usrerId: number) => onlineUsers[usrerId];
 
-    const onSearch = (event: any) => {
-        const search = event.target.value.toLowerCase();
+    const onSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        const search = (event.target as HTMLInputElement).value.toLowerCase();
         console.log(search);
         setLocalConversations(
             conversations.filter((conversation) => {
@@ -107,7 +107,7 @@ const ChatLayout = ({ children }: Props) => {
                         className="w-full"
                     />
                 </div>
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 mb-16 overflow-auto">
                     {sortConversations &&
                         sortConversations.map((conversation) => (
                             <ConversationItem
@@ -121,9 +121,7 @@ const ChatLayout = ({ children }: Props) => {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col overflow-hidden">
-                {children}
-            </div>
+            <div className="flex-1 flex flex-col max-h-screen">{children}</div>
         </div>
     );
 };
