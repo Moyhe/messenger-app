@@ -4,22 +4,22 @@ const formatMessageDateLoing = (date: string) => {
       const now = new Date();
       const inputDate  = new Date(date);
 
-     if (isToday(inputDate as Date)) {
+     if (isToday(inputDate)) {
         return inputDate.toLocaleTimeString([], {
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
         });
-     } else if (isYesterDay(inputDate as Date)) {
+     } else if (isYesterDay(inputDate)) {
             return (
-                "Yesterday" + inputDate.toLocaleTimeString([], {
+                "Yesterday " + inputDate.toLocaleTimeString([], {
                     hour: "2-digit",
-                    minute: "2-digit"
+                    minute: "2-digit",
                 })
             )
      } else if (inputDate.getFullYear() === now.getFullYear()) {
         return inputDate.toLocaleDateString([], {
-            day: '2-digit',
-            month: 'short'
+            day: "2-digit",
+            month: "short",
         })
      } else {
         return inputDate.toLocaleDateString();
@@ -31,17 +31,17 @@ const formatMessageDateShort = (date: string) => {
     const now = new Date();
     const inputDate = new Date(date);
 
-   if (isToday(inputDate as Date)) {
+   if (isToday(inputDate)) {
       return inputDate.toLocaleTimeString([], {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
       });
-   } else if (isYesterDay(inputDate as Date)) {
-          return "Yesterday";
+   } else if (isYesterDay(inputDate)) {
+          return "Yesterday ";
    } else if (inputDate.getFullYear() === now.getFullYear()) {
       return inputDate.toLocaleDateString([], {
-          day: '2-digit',
-          month: 'short'
+          day: "2-digit",
+          month: "short",
       })
    } else {
       return inputDate.toLocaleDateString();
@@ -55,9 +55,9 @@ const isToday = (date : Date) => {
     const today = new Date();
 
     return (
-      today.getDate() === date.getDate() &&
-      today.getMonth() === date.getMonth() &&
-      today.getFullYear() === date.getFullYear()
+      date.getDate() ===  today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
     );
 }
 
@@ -68,9 +68,9 @@ const isYesterDay = (date: Date) => {
      yesterday.setDate(yesterday.getDate() - 1);
 
      return (
-        yesterday.getDate() === date.getDate() &&
-        yesterday.getMonth() === date.getMonth() &&
-        yesterday.getFullYear() === date.getFullYear()
+        date.getDate() === yesterday.getDate() &&
+        date.getMonth() === yesterday.getMonth() &&
+        date.getFullYear() === yesterday.getFullYear()
       );
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class MessageResource extends JsonResource
 {
-    public static $wrap = false;
+
     /**
      * Transform the resource into an array.
      *
@@ -28,5 +28,15 @@ class MessageResource extends JsonResource
             'updated_at' => $this->updated_at
 
         ];
+    }
+
+    /**
+     * Get additional data that should be returned with the resource array.
+     *
+     * @return array<string, mixed>
+     */
+    public function with(Request $request): array
+    {
+        return [];
     }
 }

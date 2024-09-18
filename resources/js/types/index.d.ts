@@ -5,6 +5,7 @@ interface User {
     email_verified_at: string;
     is_admin: boolean;
     is_group: boolean;
+    is_user: boolean;
     avatar: string;
     blocked_at: string;
     last_message_date: string;

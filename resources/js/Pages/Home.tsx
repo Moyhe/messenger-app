@@ -3,23 +3,27 @@ import MessageItem from "@/Components/App/MessageItem";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
 import { UserGroup } from "@/types/conversations";
-import { Messages } from "@/types/messages";
+import { Message, Messages } from "@/types/messages";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
-    messages: Messages[];
+    messages: Message;
     selectedConversations: UserGroup;
 }
 
 export default function Home({ messages, selectedConversations }: Props) {
     const [localMessages, setLocalMessages] = useState<Messages[]>([]);
 
-    useEffect(() => {
-        setLocalMessages(messages);
-    }, [messages]);
+    console.log("messages", messages);
+    console.log("-----------------------------");
+    console.log("local messages", localMessages);
 
     const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setLocalMessages(messages ? messages.data : []);
+    }, [messages]);
 
     return (
         <AuthenticatedLayout>

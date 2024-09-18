@@ -15,6 +15,7 @@ class MessageSeeder extends Seeder
      */
     public function run(): void
     {
+
         Message::factory()->count(1000)->create();
 
         $messages = Message::query()->whereNull('group_id')->orderBy('created_at')->get();

@@ -1,7 +1,10 @@
 import { User } from ".";
 
-interface Attachments {
+export interface ApiResponse<T> {
+    data: T;
+}
 
+interface Attachments {
     id: number;
     message_id: number;
     name: string;
@@ -24,3 +27,8 @@ export interface Messages {
     updated_at: string;
 }
 
+export interface Message {
+    data: Messages[];
+    links: {};
+    meta: {};
+}

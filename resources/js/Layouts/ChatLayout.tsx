@@ -18,8 +18,6 @@ const ChatLayout = ({ children }: Props) => {
     const conversations = page.conversations;
     const selectedConversation = page.selectedConversation;
 
-    console.log(conversations);
-
     const [localConversations, setLocalConversations] = useState<UserGroup[]>(
         []
     );
