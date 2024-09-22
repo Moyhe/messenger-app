@@ -4,6 +4,7 @@ import { Link, usePage } from "@inertiajs/react";
 import GroupAvatar from "./GroupAvatar";
 import UserAvatar from "./UserAvatar";
 import UserOptionsDropdown from "./UserOptionsDropdown";
+import { formatMessageDateShort } from "@/services/formate-date";
 
 interface Props {
     online?: boolean;
@@ -74,7 +75,9 @@ export const ConversationItem = ({ online, conversations }: Props) => {
                     </h3>
                     {conversations.last_message_date && (
                         <span className="text-nowrap">
-                            {conversations.last_message_date}
+                            {formatMessageDateShort(
+                                conversations.last_message_date
+                            )}
                         </span>
                     )}
                 </div>

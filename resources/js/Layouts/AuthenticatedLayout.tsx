@@ -2,8 +2,11 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
+import echo from "@/echo";
+import { useEventBusContext } from "@/EventBus";
 import { PageProps } from "@/types";
 import { ConversationProps } from "@/types/conversations";
+import { Messages } from "@/types/messages";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
@@ -18,21 +21,64 @@ export default function Authenticated({
     const { conversations } = usePage<ConversationProps>().props;
     const user = page.auth.user;
 
-    // useEffect(() => {
-    //      conversations.forEach((conversation) => {
-    //         let channel = `message.group.${conversation.id}`
+    const { emit } = useEventBusContext();
 
-    //         if (conversation.is_user) {
-    //              channel = `message.user.${[
-    //                 user.id, conversation.id
-    //              ].sort((a, b) => a - b).join("_") }`
-    //         }
+    useEffect(() => {
+        conversations.forEach((conversation) => {
+            let channel = `message.group.${conversation.id}`;
 
-    //      });
-    // }, [conversations]);
+            if (conversation.is_user) {
+                channel = `message.user.${[user.id, conversation.id]
+                    .sort((a, b) => a - b)
+                    .join("-")}`;
+            }
+
+            echo.private(channel)
+                .error((error: Error) => {
+                    console.log(error.message);
+                })
+                .listen("SocketMessage", (e: Messages) => {
+                    console.log("SocketMessage", e);
+
+                    if (e.sender_id == user.id) {
+                        return;
+                    }
+
+                    const message = e.message;
+
+                    emit("message.created", message);
+
+                    emit("NewMessageNotification", {
+                        user: e.sender,
+                        group_id: e.group_id,
+                        message:
+                            e.message ||
+                            `Shared ${
+                                e.attachments.length == 1
+                                    ? "an attachment"
+                                    : e.attachments.length + " attachments"
+                            }`,
+                    });
+                });
+        });
+
+        return () => {
+            conversations.forEach((conversation) => {
+                let channel = `message.group.${conversation.id}`;
+
+                if (conversation.is_user) {
+                    channel = `message.user.${[user.id, conversation.id]
+                        .sort((a, b) => a - b)
+                        .join("-")}`;
+                }
+
+                echo.leave(channel);
+            });
+        };
+    }, [conversations]);
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="min-h-screen bg-gray-100 flex flex-col h-screen dark:bg-gray-900">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -190,7 +236,7 @@ export default function Authenticated({
                 </header>
             )}
 
-            <main>{children}</main>
+            {children}
         </div>
     );
 }

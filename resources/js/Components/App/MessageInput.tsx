@@ -20,6 +20,10 @@ const MessageInput = ({ conversation }: Props) => {
     const [messageSending, setMessageSending] = useState(false);
 
     const onSend = () => {
+        if (messageSending) {
+            return;
+        }
+
         if (newMessage.trim() === "") {
             setInputErrorMessage(
                 "please provide a message or upload attachments"
@@ -62,7 +66,7 @@ const MessageInput = ({ conversation }: Props) => {
     };
 
     return (
-        <div className="flex flex-wrap mb-16 items-start border-t border-slate-700 py-3">
+        <div className="flex flex-wrap items-start border-t border-slate-700 py-3">
             <div className="order-2 flex-1 xs:flex-none xs:order-1 p-2">
                 <button className="p-1 text-gray-400 hover:text-gray-300 relative">
                     <PaperClipIcon className="w-6" />
@@ -95,11 +99,9 @@ const MessageInput = ({ conversation }: Props) => {
                     />
                     <button
                         onClick={onSend}
+                        disabled={messageSending}
                         className="btn btn-info rounded-none"
                     >
-                        {messageSending && (
-                            <span className="loading loading-spinner loading-xs" />
-                        )}
                         <PaperAirplaneIcon className="w-6" />
                         <span className="hidden sm:inline">send</span>
                     </button>

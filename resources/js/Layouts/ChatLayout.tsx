@@ -1,8 +1,10 @@
 import { ConversationItem } from "@/Components/App/ConversationItem";
 import TextInput from "@/Components/TextInput";
 import echo from "@/echo";
+import { useEventBusContext } from "@/EventBus";
 import { User } from "@/types";
 import { ConversationProps, UserGroup } from "@/types/conversations";
+import { Message, Messages } from "@/types/messages";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import { usePage } from "@inertiajs/react";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
@@ -25,6 +27,8 @@ const ChatLayout = ({ children }: Props) => {
 
     const isUserOnline = (usrerId: number) => onlineUsers[usrerId];
 
+    const { on } = useEventBusContext();
+
     const onSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const search = (event.target as HTMLInputElement).value.toLowerCase();
         console.log(search);
@@ -34,6 +38,45 @@ const ChatLayout = ({ children }: Props) => {
             })
         );
     };
+
+    const messageCreated = (message: Messages) => {
+        setLocalConversations((oldUsers) => {
+            return oldUsers.map((user) => {
+                if (
+                    message.receiver_id &&
+                    !user.is_group &&
+                    (user.id == message.sender_id ||
+                        user.id == message.receiver_id)
+                ) {
+                    user.last_message = message.message;
+                    user.last_message_date = message.created_at;
+
+                    return user;
+                }
+
+                if (
+                    message.group_id &&
+                    user.is_group &&
+                    user.id == message.group_id
+                ) {
+                    user.last_message = message.message;
+                    user.last_message_date = message.created_at;
+
+                    return user;
+                }
+
+                return user;
+            });
+        });
+    };
+
+    useEffect(() => {
+        const offCreated = on("message.created", messageCreated);
+
+        return () => {
+            offCreated();
+        };
+    }, [on]);
 
     useEffect(() => {
         setSortConversations(
@@ -65,20 +108,22 @@ const ChatLayout = ({ children }: Props) => {
 
     useEffect(() => {
         echo.join("chat")
-            .here((users: User) => {
-                setOnlineUsers([{ ...users }]);
+            .here((users: User[]) => {
+                setOnlineUsers([...users]);
             })
             .joining((user: User) => {
-                setOnlineUsers([...onlineUsers, user]);
+                setOnlineUsers((prevUsers) => [...prevUsers, user]);
             })
             .leaving((user: User) => {
-                setOnlineUsers([user]);
+                setOnlineUsers((prevUsers) =>
+                    prevUsers.filter((u) => u.id !== user.id)
+                );
             })
             .error((error: Error) => {
                 console.error(error);
             });
         return () => {
-            return echo.leave("online");
+            echo.leave("online");
         };
     }, []);
 
@@ -121,7 +166,7 @@ const ChatLayout = ({ children }: Props) => {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col max-h-screen">{children}</div>
+            <div className="flex-1 flex flex-col">{children}</div>
         </div>
     );
 };

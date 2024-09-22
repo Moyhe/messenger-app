@@ -66,16 +66,16 @@ class User extends Authenticatable
             ->where('users.id', '!=', $userId)
             ->when(
                 !$user->id_admin,
-                fn ($query) =>
+                fn($query) =>
                 $query->whereNull('users.blocked_at')
             )
             ->leftJoin(
                 'conversations',
-                fn ($join) =>
+                fn($join) =>
                 $join->on('conversations.user_id1', '=', 'users.id')
                     ->where('conversations.user_id2', $userId)
                     ->orWhere(
-                        fn ($query) =>
+                        fn($query) =>
                         $query->on('conversations.user_id2', '=', 'users.id')
                             ->where('conversations.user_id1', $userId)
                     )
