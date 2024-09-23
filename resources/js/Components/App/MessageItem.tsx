@@ -1,15 +1,18 @@
 import { PageProps } from "@/types";
-import { Messages } from "@/types/messages";
+import { Attachments, Messages } from "@/types/messages";
 import { usePage } from "@inertiajs/react";
 import UserAvatar from "./UserAvatar";
 import ReactMarkdown from "react-markdown";
 import { formatMessageDateLoing } from "../../services/formate-date";
+import MessageAttachments from "./MessageAttachments";
+import Attachement from "@/types/attachment";
 
 interface Props {
     message: Messages;
+    attachmentClick: (attachments: Attachments, index: number) => void;
 }
 
-const MessageItem = ({ message }: Props) => {
+const MessageItem = ({ message, attachmentClick }: Props) => {
     const currentUser = usePage<PageProps>().props.auth.user;
 
     return (
@@ -44,6 +47,10 @@ const MessageItem = ({ message }: Props) => {
                     <div className="chat-message-content">
                         <ReactMarkdown>{message.message}</ReactMarkdown>
                     </div>
+                    <MessageAttachments
+                        attachments={message.attachments}
+                        attachmentClick={attachmentClick}
+                    />
                 </div>
             </div>
         </div>

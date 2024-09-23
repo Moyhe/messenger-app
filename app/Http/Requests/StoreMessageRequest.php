@@ -22,7 +22,7 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => ['required', 'nullable'],
+            'message' => ['nullable'],
             'group_id' => ['required_without:receiver_id', 'nullable', 'exists:groups,id'],
             'receiver_id' => ['required_without:group_id', 'nullable', 'exists:users,id'],
             'attachments' => ['nullable', 'array', 'max:10'],

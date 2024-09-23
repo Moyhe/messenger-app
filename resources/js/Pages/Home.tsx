@@ -1,3 +1,4 @@
+import AttachmentPreviewModel from "@/Components/App/AttachmentPreviewModel";
 import ConversationHeader from "@/Components/App/ConversationHeader";
 import MessageInput from "@/Components/App/MessageInput";
 import MessageItem from "@/Components/App/MessageItem";
@@ -5,7 +6,8 @@ import { useEventBusContext } from "@/EventBus";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
 import { UserGroup } from "@/types/conversations";
-import { Message, Messages } from "@/types/messages";
+import { Attachments, Message, Messages } from "@/types/messages";
+import PreviewAttachment from "@/types/previewAttachment";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,6 +25,12 @@ export default function Home({ messages, selectedConversations }: Props) {
 
     const messageRef = useRef<HTMLDivElement>(null);
     const loadMoreIntersect = useRef<HTMLDivElement>(null);
+
+    const [showAttachmentPreview, setShowAttachmentPreview] = useState(false);
+
+    const [previewAttachment, setPreviewAttachment] =
+        useState<PreviewAttachment>({} as PreviewAttachment);
+
     const { on } = useEventBusContext();
 
     const loadMoreMessages = useCallback(() => {
@@ -55,6 +63,15 @@ export default function Home({ messages, selectedConversations }: Props) {
                 });
             });
     }, [localMessages, noMoreMessage]);
+
+    const onAttachmentClick = (attachments: any, index: number) => {
+        setPreviewAttachment({
+            attachments,
+            index,
+        });
+
+        setShowAttachmentPreview(true);
+    };
 
     useEffect(() => {
         if (messageRef.current && scrollFromBottom !== null) {
@@ -167,6 +184,7 @@ export default function Home({ messages, selectedConversations }: Props) {
                                         <MessageItem
                                             key={message.id}
                                             message={message}
+                                            attachmentClick={onAttachmentClick}
                                         />
                                     ))}
                                 </div>
@@ -175,6 +193,15 @@ export default function Home({ messages, selectedConversations }: Props) {
 
                         <MessageInput conversation={selectedConversations} />
                     </>
+                )}
+
+                {previewAttachment.attachments && (
+                    <AttachmentPreviewModel
+                        attachments={previewAttachment.attachments}
+                        index={previewAttachment.index}
+                        show={showAttachmentPreview}
+                        onClose={() => setShowAttachmentPreview(false)}
+                    />
                 )}
             </ChatLayout>
         </AuthenticatedLayout>

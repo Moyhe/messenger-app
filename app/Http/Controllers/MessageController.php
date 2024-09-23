@@ -18,25 +18,27 @@ class MessageController extends Controller
 
     public function byUser(User $user)
     {
-        $messages = Message::query()->where(
-            [
-                ['sender_id', auth()->id()],
-                ['receiver_id', $user->id]
-            ]
-        )->orWhere(function (Builder $query) use ($user) {
-            $query->where([
-                ['sender_id', $user->id],
-                ['receiver_id', auth()->id()]
-
-            ]);
-        })->latest()->paginate(10);
-
+        $messages = Message::query()
+            ->where(function (Builder $query) use ($user) {
+                $query->where([
+                    ['sender_id', auth()->id()],
+                    ['receiver_id', $user->id]
+                ])->orWhere(function (Builder $query) use ($user) {
+                    $query->where([
+                        ['sender_id', $user->id],
+                        ['receiver_id', auth()->id()]
+                    ]);
+                });
+            })
+            ->latest()
+            ->paginate(10);
 
         return Inertia::render('Home', [
             'selectedConversations' => $user->toConversationArray(),
             'messages' => MessageResource::collection($messages)
         ]);
     }
+
 
     public function byGroup(Group $group)
     {
@@ -89,6 +91,8 @@ class MessageController extends Controller
         $receiver_id = $data['receiver_id'] ?? null;
         $gorup_id = $data['group_id'] ?? null;
         $files = $data['attachments'] ?? [];
+
+        unset($data['attachments']);
 
         $message = Message::create($data);
 

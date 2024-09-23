@@ -39,14 +39,13 @@ export default function Authenticated({
                 })
                 .listen("SocketMessage", (e: Messages) => {
                     console.log("SocketMessage", e);
+                    const message = e.message;
+
+                    emit("message.created", message);
 
                     if (e.sender_id == user.id) {
                         return;
                     }
-
-                    const message = e.message;
-
-                    emit("message.created", message);
 
                     emit("NewMessageNotification", {
                         user: e.sender,
@@ -56,7 +55,7 @@ export default function Authenticated({
                             `Shared ${
                                 e.attachments.length == 1
                                     ? "an attachment"
-                                    : e.attachments.length + " attachments"
+                                    : e.attachments.length + "attchaments"
                             }`,
                     });
                 });
