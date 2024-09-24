@@ -81,7 +81,7 @@ const isImage = (attachment: attachment) => {
 const isAudio = (attachment: attachment) => {
     let mime = attachment.type || attachment.mime;
 
-    return mime.split("/")[0].toLowerCase() == "aduio";
+    return mime.split("/")[0].toLowerCase() == "audio";
 };
 
 const isVideo = (attachment: attachment) => {
