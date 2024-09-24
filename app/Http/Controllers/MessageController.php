@@ -136,14 +136,10 @@ class MessageController extends Controller
             return response()->json([
                 'message' => "Forbidden"
             ], 403);
-
-            $message->delete();
-
-            foreach ($message->attachments() as $attachments) {
-                $attachments->delete();
-            }
-
-            return response()->json('', 204);
         }
+
+        $message->delete();
+
+        return response('', 204);
     }
 }

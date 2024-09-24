@@ -23,11 +23,11 @@ return new class extends Migration
 
 
         Schema::table('groups', function (Blueprint $table) {
-            $table->foreignId('last_message_id')->nullable()->constrained('messages');
+            $table->foreignId('last_message_id')->nullable()->constrained('messages')->onDelete('set null');
         });
 
         Schema::table('conversations', function (Blueprint $table) {
-            $table->foreignId('last_message_id')->nullable()->constrained('messages');
+            $table->foreignId('last_message_id')->nullable()->constrained('messages')->onDelete('set null');
         });
     }
 

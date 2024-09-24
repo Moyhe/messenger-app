@@ -5,7 +5,7 @@ import UserAvatar from "./UserAvatar";
 import ReactMarkdown from "react-markdown";
 import { formatMessageDateLoing } from "../../services/formate-date";
 import MessageAttachments from "./MessageAttachments";
-import Attachement from "@/types/attachment";
+import MessageOptionsDropdown from "./MessageOptionsDropdown";
 
 interface Props {
     message: Messages;
@@ -43,6 +43,9 @@ const MessageItem = ({ message, attachmentClick }: Props) => {
                         : "")
                 }
             >
+                {message.sender_id == currentUser.id && (
+                    <MessageOptionsDropdown message={message} />
+                )}
                 <div className="chat-message">
                     <div className="chat-message-content">
                         <ReactMarkdown>{message.message}</ReactMarkdown>

@@ -17,6 +17,7 @@ import { attachment, isAudio, isImage } from "@/services/formate-date";
 import CustomAudioPlayer from "./CustomAudioPlayer";
 import AttachmentPreview from "./AttachmentPreview";
 import AudioRecorder from "./AudioRecorder";
+import { useEventBusContext } from "@/EventBus";
 
 interface Props {
     conversation: UserGroup;

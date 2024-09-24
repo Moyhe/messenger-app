@@ -62,7 +62,7 @@ const AudioRecorder = ({ fileReady }: Props) => {
             className="p-1 text-gray-400 hover:text-gray-200"
         >
             {recording && <StopCircleIcon className="w-6 text-red-600" />}
-            {!recording && <MicrophoneIcon className="w-6 text-gray-500" />}
+            {!recording && <MicrophoneIcon className="w-6" />}
         </button>
     );
 };

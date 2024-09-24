@@ -32,3 +32,7 @@ export interface Message {
     links: {};
     meta: {};
 }
+
+export default interface BroadCastMessage {
+    message: Messages;
+}

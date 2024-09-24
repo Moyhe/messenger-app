@@ -1,4 +1,4 @@
-type EventCallback = (data: any) => void;
+type EventCallback = (...data: any) => void;
 
 interface Events {
     [key: string]: EventCallback[];
