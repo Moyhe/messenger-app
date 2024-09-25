@@ -6,7 +6,11 @@ import { useEventBusContext } from "@/EventBus";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
 import { UserGroup } from "@/types/conversations";
-import { Attachments, Message, Messages } from "@/types/messages";
+import BroadCastMessage, {
+    Attachments,
+    Message,
+    Messages,
+} from "@/types/messages";
 import PreviewAttachment from "@/types/previewAttachment";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
@@ -107,6 +111,29 @@ export default function Home({ messages, selectedConversations }: Props) {
         };
     }, [localMessages]);
 
+    const messageDeleted = ({ message }: BroadCastMessage) => {
+        if (
+            selectedConversations &&
+            selectedConversations.is_group &&
+            selectedConversations.id == message.group_id
+        ) {
+            setLocalMessages((prevMessage) => {
+                return prevMessage.filter((m) => m.id !== message.id);
+            });
+        }
+
+        if (
+            selectedConversations &&
+            selectedConversations.is_user &&
+            (selectedConversations.id == message.sender_id ||
+                selectedConversations.id == message.receiver_id)
+        ) {
+            setLocalMessages((prevMessage) => {
+                return prevMessage.filter((m) => m.id !== message.id);
+            });
+        }
+    };
+
     const messageCreated = (message: Messages) => {
         if (
             selectedConversations &&
@@ -135,12 +162,14 @@ export default function Home({ messages, selectedConversations }: Props) {
         }, 10);
 
         const offCreated = on("message.created", messageCreated);
+        const offDeleted = on("message.deleted", messageDeleted);
 
         setScrollFromBottom(0);
         setNoMoreMessage(false);
 
         return () => {
             offCreated();
+            offDeleted();
         };
     }, [selectedConversations]);
 

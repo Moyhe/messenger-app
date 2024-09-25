@@ -138,8 +138,28 @@ class MessageController extends Controller
             ], 403);
         }
 
+        $group = null;
+        $conversation = null;
+        $lastMessage = null;
+
+        if ($message->group_id) {
+
+            $group = Group::query()->where('last_message_id', $message->id)->first();
+        } else {
+            $conversation = Conversation::query()->where('last_message_id', $message->id)->first();
+        }
+
         $message->delete();
 
-        return response('', 204);
+        if ($group) {
+            $group = Group::query()->find($group->id);
+            $lastMessage = $group->lastMessage;
+        } else if ($conversation) {
+            $conversation = Conversation::query()->find($conversation->id);
+            $lastMessage = $conversation->lastMessage;
+        }
+
+
+        return response()->json(['message' => $lastMessage ? new MessageResource($lastMessage) : null]);
     }
 }

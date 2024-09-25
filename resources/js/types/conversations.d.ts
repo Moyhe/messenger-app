@@ -6,7 +6,7 @@ interface Conversation {
     is_group: boolean;
     is_user: boolean;
     description: string;
-    owner_id: boolean;
+    owner_id: number;
     last_message_date: string;
     last_message: string;
     users: User[];

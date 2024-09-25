@@ -32,6 +32,15 @@ class Group extends Model
         return $this->hasMany(Message::class);
     }
 
+    /**
+     * Get the lastMessage that owns the Group
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lastMessage(): BelongsTo
+    {
+        return $this->belongsTo(Message::class, 'last_message_id');
+    }
 
     /**
      * Get the owner that owns the Group

@@ -1,5 +1,5 @@
 import { useEventBusContext } from "@/EventBus";
-import { Messages } from "@/types/messages";
+import BroadCastMessage, { Messages } from "@/types/messages";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
@@ -16,11 +16,14 @@ const MessageOptionsDropdown = ({ message }: Props) => {
         console.log("message Deleted");
 
         axios
-            .delete(route("message.destroy", message.id))
+            .delete<BroadCastMessage>(route("message.destroy", message.id))
             .then((res) => {
-                console.log(res.status);
+                console.log(res.data);
 
-                emit("message.deleted", message);
+                emit("message.deleted", {
+                    message,
+                    prevMessage: res.data.message,
+                });
             })
             .catch((error: Error) => {
                 console.log(error.message);
