@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Jobs\DeleteGroupJob;
 use App\Models\Group;
+use Arr;
 
 class GroupController extends Controller
 {
@@ -17,9 +18,11 @@ class GroupController extends Controller
         $data = $request->validated();
         $user_ids =   $data['user_ids'] ?? [];
 
+        unset($data['user_ids']);
+
         $group = Group::create($data);
 
-        $group->users()->attach(array_unique([$request->user()->id, ...$user_ids]));
+        $group->users()->syncWithoutDetaching(array_unique([$request->user()->id, ...$user_ids]));
 
         return redirect()->back();
     }
@@ -30,13 +33,15 @@ class GroupController extends Controller
     public function update(UpdateGroupRequest $request, Group $group)
     {
         $data = $request->validated();
-        $user_ids =   $data['user_ids'] ?? [];
+        $user_ids = $data['user_ids'] ?? [];
+
+        unset($data['user_ids']);
 
         $group->update($data);
 
         $group->users()->detach($user_ids);
 
-        $group->users()->attach(array_unique([$request->user()->id, ...$user_ids]));
+        $group->users()->syncWithoutDetaching(array_unique([$request->user()->id, ...$user_ids]));
 
         return redirect()->back();
     }

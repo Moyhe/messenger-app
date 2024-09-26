@@ -12,6 +12,7 @@ import GrorupUsersPopover from "./GrorupUsersPopover";
 import { useEventBusContext } from "@/EventBus";
 import axios from "axios";
 import { PageProps } from "@/types";
+import Toasts from "@/types/toasts";
 
 interface Props {
     selectedConversations: UserGroup;
@@ -28,9 +29,8 @@ const ConversationHeader = ({ selectedConversations }: Props) => {
         }
 
         axios
-            .delete(route("group.destroy", selectedConversations.id))
+            .delete<Toasts>(route("group.destroy", selectedConversations.id))
             .then((res) => {
-                console.log(res);
                 emit("toast.show", res.data.message);
             })
             .catch((err: Error) => {

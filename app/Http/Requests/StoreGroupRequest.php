@@ -31,7 +31,7 @@ class StoreGroupRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $validated = parent::validate($key, $default);
+        $validated = parent::validated($key, $default);
         $validated['owner_id'] = $this->user()->id;
 
         return $validated;

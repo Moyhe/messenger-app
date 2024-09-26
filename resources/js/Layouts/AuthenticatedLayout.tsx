@@ -66,8 +66,6 @@ export default function Authenticated({
             if (conversation.is_group) {
                 echo.private(`group.deleted.${conversation.id}`)
                     .listen("GroupDeleted", (e: GroupDelete) => {
-                        console.log("GroupDeleted", e);
-
                         emit("group.deleted", { id: e.id, name: e.name });
                     })
                     .error((error: Error) => {

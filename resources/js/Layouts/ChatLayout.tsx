@@ -36,7 +36,7 @@ const ChatLayout = ({ children }: Props) => {
 
     const onSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const search = (event.target as HTMLInputElement).value.toLowerCase();
-        console.log(search);
+
         setLocalConversations(
             conversations.filter((conversation) => {
                 return conversation.name.toLowerCase().includes(search);
@@ -91,6 +91,7 @@ const ChatLayout = ({ children }: Props) => {
         });
 
         emit("toast.show", `group ${name} was deleted`);
+
         router.visit(route("dashboard"));
         // if (
         //     !selectedConversation ||

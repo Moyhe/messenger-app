@@ -67,8 +67,8 @@ const UserPicker = ({ value, options, onSelect }: Props) => {
                             ) : (
                                 filteredPeople.map((person) => (
                                     <Combobox.Option
-                                        key={person.id} // Ensure a unique key for each option
-                                        value={person} // Use the person object as the value
+                                        key={person.id}
+                                        value={person}
                                         className={({ active }) =>
                                             `relative cursor-default select-none py-2 pl-10 pr-4 ${
                                                 active
@@ -109,7 +109,7 @@ const UserPicker = ({ value, options, onSelect }: Props) => {
             </Combobox>
 
             {selected && (
-                <div className="flex gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-3">
                     {selected.map((person) => (
                         <div
                             key={person.id}

@@ -84,7 +84,8 @@ class Group extends Model
 
     public static function updateGroupWithMessage($group_id, $message)
     {
-        return self::updateOrCreate([
+
+        self::updateOrCreate([
             'id' => $group_id,
             'last_message_id' => $message->id
         ]);
