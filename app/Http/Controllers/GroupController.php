@@ -22,7 +22,7 @@ class GroupController extends Controller
 
         $group = Group::create($data);
 
-        $group->users()->syncWithoutDetaching(array_unique([$request->user()->id, ...$user_ids]));
+        $group->users()->syncWithoutDetaching($request->user()->id, ...$user_ids);
 
         return redirect()->back();
     }
@@ -41,7 +41,7 @@ class GroupController extends Controller
 
         $group->users()->detach($user_ids);
 
-        $group->users()->syncWithoutDetaching(array_unique([$request->user()->id, ...$user_ids]));
+        $group->users()->syncWithoutDetaching($request->user()->id, ...$user_ids);
 
         return redirect()->back();
     }

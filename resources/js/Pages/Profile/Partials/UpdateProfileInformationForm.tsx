@@ -4,8 +4,9 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import { FormEventHandler } from "react";
-import { PageProps } from "@/types";
+import { ChangeEvent, FormEventHandler } from "react";
+import { PageProps, User } from "@/types";
+import UserAvatar from "@/Components/App/UserAvatar";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -18,16 +19,18 @@ export default function UpdateProfileInformation({
 }) {
     const user = usePage<PageProps>().props.auth.user;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
+    const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
+            avatar: user.avatar,
+            _method: "PATCH",
         });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route("profile.update"));
+        post(route("profile.update"));
     };
 
     return (
@@ -43,6 +46,33 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
+                <UserAvatar profile={true} user={user} />
+                <div>
+                    <InputLabel
+                        htmlFor="avatar"
+                        className=" mb-1"
+                        value="Profile Picture"
+                    />
+                    <input
+                        type="file"
+                        id="avatar"
+                        className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                        onChange={(e) => {
+                            const files = e.target.files;
+                            if (files && files.length > 0) {
+                                setData("avatar", files[0]);
+                            }
+                        }}
+                        required
+                    />
+
+                    <p className="mt-1 text-gray-400">
+                        Please upload square picture. Ex: 512px&times;512px
+                    </p>
+
+                    <InputError className="mt-2" message={errors.avatar} />
+                </div>
+
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 

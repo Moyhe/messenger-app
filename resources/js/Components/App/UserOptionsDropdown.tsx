@@ -1,4 +1,6 @@
+import { useEventBusContext } from "@/EventBus";
 import { UserGroup } from "@/types/conversations";
+import Toasts from "@/types/toasts";
 import { Menu, Transition } from "@headlessui/react";
 import {
     EllipsisVerticalIcon,
@@ -14,13 +16,18 @@ interface Props {
 }
 
 const UserOptionsDropdown = ({ conversations }: Props) => {
+    const { emit } = useEventBusContext();
+
     const changeUserRole = () => {
         console.log("change user role");
         if (!conversations.is_user) return;
 
         axios
-            .post<UserGroup>(route("user.changeRole", conversations.id))
-            .then((res) => console.log(res.data))
+            .post<Toasts>(route("user.changeRole", conversations.id))
+            .then((res) => {
+                emit("toast.show", res.data.message);
+                console.log(res.data);
+            })
             .catch((err: Error) => console.log(err.message));
     };
 
@@ -29,8 +36,11 @@ const UserOptionsDropdown = ({ conversations }: Props) => {
         if (!conversations.is_user) return;
 
         axios
-            .post<UserGroup>(route("user.blockUnBlock", conversations.id))
-            .then((res) => console.log(res.data))
+            .post<Toasts>(route("user.blockUnBlock", conversations.id))
+            .then((res) => {
+                emit("toast.show", res.data.message);
+                console.log(res.data);
+            })
             .catch((err: Error) => console.log(err.message));
     };
 

@@ -1,8 +1,11 @@
 import NewMessageNotification from "@/Components/App/NewMessageNotification";
+import NewUserModal from "@/Components/App/NewUserModal";
 import Toast from "@/Components/App/Toast";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
+import Modal from "@/Components/Modal";
 import NavLink from "@/Components/NavLink";
+import PrimaryButton from "@/Components/PrimaryButton";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import echo from "@/echo";
 import { useEventBusContext } from "@/EventBus";
@@ -10,6 +13,7 @@ import { PageProps } from "@/types";
 import { ConversationProps } from "@/types/conversations";
 import GroupDelete from "@/types/group.delete";
 import BroadCastMessage, { Messages } from "@/types/messages";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
@@ -23,6 +27,8 @@ export default function Authenticated({
     const page = usePage<PageProps>().props;
     const { conversations } = usePage<ConversationProps>().props;
     const user = page.auth.user;
+
+    const [showUserModal, setShowUserModal] = useState(false);
 
     const { emit } = useEventBusContext();
 
@@ -117,7 +123,18 @@ export default function Authenticated({
                             </div>
 
                             <div className="hidden sm:flex sm:items-center sm:ms-6">
-                                <div className="ms-3 relative">
+                                <div className="flex ms-3 relative">
+                                    {user.is_admin && (
+                                        <PrimaryButton
+                                            onClick={(e) =>
+                                                setShowUserModal(true)
+                                            }
+                                        >
+                                            <UserPlusIcon className="h-5 w-5 mr-2" />
+                                            Add New User
+                                        </PrimaryButton>
+                                    )}
+
                                     <Dropdown>
                                         <Dropdown.Trigger>
                                             <span className="inline-flex rounded-md">
@@ -255,6 +272,11 @@ export default function Authenticated({
 
                 {children}
             </div>
+
+            <NewUserModal
+                show={showUserModal}
+                onClose={() => setShowUserModal(false)}
+            />
             <Toast />
             <NewMessageNotification />
         </>

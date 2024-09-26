@@ -67,24 +67,27 @@ class Conversation extends Model
 
     public static function updateConversationWithMessage($user_id1, $user_id2, $message)
     {
-        $conversations = Conversation::query()->where([
-            ['user_id1', $user_id1],
-            ['user_id2', $user_id2]
-        ])->orWhere(function (Builder $query) use ($user_id1, $user_id2) {
-            $query->where([
-                ['user_id1', $user_id2],
-                ['user_id2', $user_id1]
+        $conversation = Conversation::query()
+            ->where([
+                ['user_id1', $user_id1],
+                ['user_id2', $user_id2]
+            ])
+            ->orWhere(function (Builder $query) use ($user_id1, $user_id2) {
+                $query->where([
+                    ['user_id1', $user_id2],
+                    ['user_id2', $user_id1]
+                ]);
+            })->first();
+
+
+        if ($conversation) {
+            $conversation->update(['last_message_id' => $message->id]);
+        } else {
+            Conversation::create([
+                'user_id1' => $user_id1,
+                'user_id2' => $user_id2,
+                'last_message_id' => $message->id
             ]);
-        })->firstOrFail();
-
-        if ($conversations) {
-            Conversation::query()->update(['last_message_id' => $message->id]);
         }
-
-        Conversation::create([
-            'user_id1' => $user_id1,
-            'user_id2' => $user_id2,
-            'last_message_id' => $message->id
-        ]);
     }
 }

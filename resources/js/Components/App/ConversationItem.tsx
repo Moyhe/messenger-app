@@ -92,7 +92,7 @@ export const ConversationItem = ({
                     </p>
                 )}
             </div>
-            {currentUser.is_admin && conversations.is_user && (
+            {!!currentUser.is_admin && conversations.is_user && (
                 <UserOptionsDropdown conversations={conversations} />
             )}
         </Link>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Storage;
 
 class Group extends Model
 {
@@ -69,6 +70,7 @@ class Group extends Model
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'avatar' => $this->avatar ? Storage::url($this->avatar) : null,
             'description' => $this->description,
             'is_group' => true,
             'is_user' => false,
@@ -84,10 +86,9 @@ class Group extends Model
 
     public static function updateGroupWithMessage($group_id, $message)
     {
-
-        self::updateOrCreate([
-            'id' => $group_id,
-            'last_message_id' => $message->id
-        ]);
+        return Group::updateOrCreate(
+            ['id' => $group_id],
+            ['last_message_id' => $message->id]
+        );
     }
 }

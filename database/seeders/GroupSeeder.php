@@ -25,7 +25,7 @@ class GroupSeeder extends Seeder
             ]);
 
             $users = User::inRandomOrder()->limit(rand(2, 5))->pluck('id');
-            $group->users()->attach(array_unique([1, ...$users]));
+            $group->users()->syncWithoutDetaching([1, ...$users]);
         }
     }
 }

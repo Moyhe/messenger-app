@@ -6,12 +6,14 @@ interface User {
     is_admin: boolean;
     is_group: boolean;
     is_user: boolean;
-    avatar: string;
+    avatar: string | File;
     blocked_at: string;
     last_message_date: string;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>
+> = T & {
     auth: {
         user: User;
     };

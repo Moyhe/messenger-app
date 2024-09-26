@@ -48,11 +48,11 @@ const GroupModal = ({ show = false, onClose }: Props) => {
     const createOrUpdateGroup = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (group?.id) {
+        if (group.id) {
             put(route("group.update", group.id), {
                 onSuccess: () => {
+                    emit("toast.show", `Group "${group.name}" was updated`);
                     closeModal();
-                    emit("tost.show", `Group "${group.name}" was updated`);
                 },
             });
             return;
@@ -96,7 +96,7 @@ const GroupModal = ({ show = false, onClose }: Props) => {
         <Modal show={show} onClose={closeModal}>
             <form
                 onSubmit={createOrUpdateGroup}
-                className="p-6 overflow-y-auto"
+                className="p-6 overflow-y-auto sm:max-w-full"
             >
                 <h2 className="text-xl font-medium text-gray-900 dark:text-gray-100">
                     {group.id ? `Group ${group.name}` : "create new group"}

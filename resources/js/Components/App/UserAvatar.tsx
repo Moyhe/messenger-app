@@ -17,7 +17,7 @@ const UserAvatar = ({ user, online, profile }: Props) => {
             {user.avatar && (
                 <div className={`chat-image avatar ${onlineClass}`}>
                     <div className={`rounded-full ${sizeClass}`}>
-                        <img src={user.avatar} />
+                        <img src={String(user.avatar)} />
                     </div>
                 </div>
             )}
