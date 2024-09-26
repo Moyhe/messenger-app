@@ -31,6 +31,7 @@ const ConversationHeader = ({ selectedConversations }: Props) => {
             .delete(route("group.destroy", selectedConversations.id))
             .then((res) => {
                 console.log(res);
+                emit("toast.show", res.data.message);
             })
             .catch((err: Error) => {
                 console.log(err.message);
@@ -44,7 +45,7 @@ const ConversationHeader = ({ selectedConversations }: Props) => {
                     <div className="flex items-center gap-3">
                         <Link
                             href={route("dashboard")}
-                            className="inline-block sm:hidden "
+                            className="inline-block sm:hidden"
                         >
                             <ArrowLeftIcon className="w-6" />
                         </Link>

@@ -9,31 +9,35 @@ import { formatMessageDateShort } from "@/services/formate-date";
 interface Props {
     online?: boolean;
     conversations: UserGroup;
-    // selectedConversations: UserGroup;
+    selectedConversations: UserGroup;
 }
 
-export const ConversationItem = ({ online, conversations }: Props) => {
+export const ConversationItem = ({
+    online,
+    conversations,
+    selectedConversations,
+}: Props) => {
     const page = usePage<PageProps>().props;
     const currentUser = page.auth.user;
 
     let classes = "border-transparent";
 
-    // if (selectedConversations) {
-    //     if (
-    //         !selectedConversations.is_group &&
-    //         !conversations.is_group &&
-    //         selectedConversations.id == conversations.id
-    //     ) {
-    //         classes = "border-blue-500 bg-black/20";
-    //     }
-    //     if (
-    //         selectedConversations.is_group &&
-    //         conversations.is_group &&
-    //         selectedConversations.id == conversations.id
-    //     ) {
-    //         classes = "border-blue-500 bg-black/20";
-    //     }
-    // }
+    if (selectedConversations) {
+        if (
+            !selectedConversations.is_group &&
+            !conversations.is_group &&
+            selectedConversations.id == conversations.id
+        ) {
+            classes = "border-blue-500 bg-black/20";
+        }
+        if (
+            selectedConversations.is_group &&
+            conversations.is_group &&
+            selectedConversations.id == conversations.id
+        ) {
+            classes = "border-blue-500 bg-black/20";
+        }
+    }
 
     return (
         <Link
@@ -44,7 +48,7 @@ export const ConversationItem = ({ online, conversations }: Props) => {
             }
             preserveState
             className={
-                "conversation-item flex items-center gap-2 p-2 text-gray-300 transition-all cursor-pointer border-1-4 hover:bg-black/20" +
+                "conversation-item  flex items-center gap-2 p-2 text-gray-300 transition-all cursor-pointer border-1-4 hover:bg-black/20" +
                 classes +
                 (conversations.is_user && currentUser.is_admin
                     ? "pr-2"

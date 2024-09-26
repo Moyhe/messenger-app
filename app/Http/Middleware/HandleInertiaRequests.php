@@ -31,15 +31,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = AUth::user();
-
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'conversations' => ($user?->id) ? Conversation::getConversationsForSidebar($user) : [],
-
+            'conversations' => Auth::id() ? Conversation::getConversationsForSidebar(Auth::user()) : [],
+            'selectedConversation' => Auth::id() ? Conversation::selectedConversationsForSidebar(Auth::user()) : [],
         ];
     }
 }

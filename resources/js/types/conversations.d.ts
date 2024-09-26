@@ -18,4 +18,5 @@ export type ConversationProps<
     T extends Record<string, unknown> = Record<string, unknown>
 > = T & {
     conversations: UserGroup[];
+    selectedConversation: UserGroup;
 };

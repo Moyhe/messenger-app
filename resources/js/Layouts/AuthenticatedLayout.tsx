@@ -8,6 +8,7 @@ import echo from "@/echo";
 import { useEventBusContext } from "@/EventBus";
 import { PageProps } from "@/types";
 import { ConversationProps } from "@/types/conversations";
+import GroupDelete from "@/types/group.delete";
 import BroadCastMessage, { Messages } from "@/types/messages";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
@@ -61,6 +62,18 @@ export default function Authenticated({
                             }`,
                     });
                 });
+
+            if (conversation.is_group) {
+                echo.private(`group.deleted.${conversation.id}`)
+                    .listen("GroupDeleted", (e: GroupDelete) => {
+                        console.log("GroupDeleted", e);
+
+                        emit("group.deleted", { id: e.id, name: e.name });
+                    })
+                    .error((error: Error) => {
+                        console.log(error.message);
+                    });
+            }
         });
 
         return () => {
@@ -74,6 +87,10 @@ export default function Authenticated({
                 }
 
                 echo.leave(channel);
+
+                if (conversation.is_group) {
+                    echo.leave(`group.deleted.${conversation.id}`);
+                }
             });
         };
     }, [conversations]);

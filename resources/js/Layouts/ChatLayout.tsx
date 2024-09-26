@@ -5,9 +5,10 @@ import echo from "@/echo";
 import { useEventBusContext } from "@/EventBus";
 import { User } from "@/types";
 import { ConversationProps, UserGroup } from "@/types/conversations";
+import GroupDelete from "@/types/group.delete";
 import { Messages } from "@/types/messages";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
@@ -21,6 +22,8 @@ const ChatLayout = ({ children }: Props) => {
     const conversations = page.conversations;
     const selectedConversation = page.selectedConversation;
 
+    console.log("selected conversation", selectedConversation);
+
     const [localConversations, setLocalConversations] = useState<UserGroup[]>(
         []
     );
@@ -29,7 +32,7 @@ const ChatLayout = ({ children }: Props) => {
 
     const isUserOnline = (usrerId: number) => onlineUsers[usrerId];
 
-    const { on } = useEventBusContext();
+    const { on, emit } = useEventBusContext();
 
     const onSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const search = (event.target as HTMLInputElement).value.toLowerCase();
@@ -80,9 +83,27 @@ const ChatLayout = ({ children }: Props) => {
         messageCreated(prevMessage);
     };
 
+    const groupDeleted = ({ id, name }: GroupDelete) => {
+        setLocalConversations((oldConversations) => {
+            return oldConversations.filter((conversation) => {
+                return conversation.id !== id;
+            });
+        });
+
+        emit("toast.show", `group ${name} was deleted`);
+        router.visit(route("dashboard"));
+        // if (
+        //     !selectedConversation ||
+        //     (selectedConversation.is_group && selectedConversation.id === id)
+        // ) {
+        //     router.visit(route("dashboard"));
+        // }
+    };
+
     useEffect(() => {
         const offCreated = on("message.created", messageCreated);
         const offDeleted = on("message.deleted", messageDeleted);
+        const offGroupDeleted = on("group.deleted", groupDeleted);
         const offShowModal = on("GroupModal.show", (group) => {
             setShowGroupModal(true);
         });
@@ -91,6 +112,7 @@ const ChatLayout = ({ children }: Props) => {
             offCreated();
             offDeleted();
             offShowModal();
+            offGroupDeleted();
         };
     }, [on]);
 
@@ -148,8 +170,8 @@ const ChatLayout = ({ children }: Props) => {
             <div className="flex-1 w-full flex overflow-hidden">
                 <div
                     id="app"
-                    className={`transition-all w-full sm-w[220px] md:w-[300px] bg-slate-800 flex flex-col overflow-hidden
-                        ${selectedConversation ? "-ml-100% sm:ml-0" : ""}`}
+                    className={`transition-all w-full sm:w-[220px] md:w-[300px] bg-slate-800 flex flex-col overflow-hidden
+                        ${selectedConversation ? "-ml-[100%] sm:ml-0" : ""}`}
                 >
                     <div className="flex items-center justify-between py-2 px-3 text-xl font-medium text-white">
                         My Conversations
@@ -183,12 +205,15 @@ const ChatLayout = ({ children }: Props) => {
                                     }${conversation.id}`}
                                     online={!!isUserOnline(conversation.id)}
                                     conversations={conversation}
+                                    selectedConversations={selectedConversation}
                                 />
                             ))}
                     </div>
                 </div>
 
-                <div className="flex-1 flex flex-col">{children}</div>
+                <div className="flex-1 flex flex-col overflow-hidden">
+                    {children}
+                </div>
             </div>
             <GroupModal
                 show={showGroupModal}

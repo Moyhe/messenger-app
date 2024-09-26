@@ -6,11 +6,7 @@ import { useEventBusContext } from "@/EventBus";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
 import { UserGroup } from "@/types/conversations";
-import BroadCastMessage, {
-    Attachments,
-    Message,
-    Messages,
-} from "@/types/messages";
+import BroadCastMessage, { Message, Messages } from "@/types/messages";
 import PreviewAttachment from "@/types/previewAttachment";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import axios from "axios";

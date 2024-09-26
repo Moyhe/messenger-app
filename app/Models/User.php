@@ -62,30 +62,29 @@ class User extends Authenticatable
     public static function getUserExceptUser(User $user)
     {
         $userId = $user->id;
-        $query = User::query()->select(['users.*', 'messages.message as last_message', 'messages.created_at as last_message_date'])
+        $query = User::query()
+            ->select(['users.*', 'messages.message as last_message', 'messages.created_at as last_message_date'])
             ->where('users.id', '!=', $userId)
             ->when(
-                !$user->id_admin,
-                fn($query) =>
-                $query->whereNull('users.blocked_at')
+                !$user->is_admin,
+                fn($query) => $query->whereNull('users.blocked_at')
             )
-            ->leftJoin(
-                'conversations',
-                fn($join) =>
+            ->leftJoin('conversations', function ($join) use ($userId) {
                 $join->on('conversations.user_id1', '=', 'users.id')
                     ->where('conversations.user_id2', $userId)
-                    ->orWhere(
-                        fn($query) =>
+                    ->orWhere(function ($query) use ($userId) {
                         $query->on('conversations.user_id2', '=', 'users.id')
-                            ->where('conversations.user_id1', $userId)
-                    )
-            )->leftJoin('messages', 'messages.id', '=', 'conversations.last_message_id')
+                            ->where('conversations.user_id1', $userId);
+                    });
+            })
+            ->leftJoin('messages', 'messages.id', '=', 'conversations.last_message_id')
             ->orderByRaw('IFNULL(users.blocked_at, 1)')
             ->orderBy('messages.created_at', 'desc')
             ->orderBy('users.name');
 
         return $query->get();
     }
+
 
     public function toConversationArray()
     {
