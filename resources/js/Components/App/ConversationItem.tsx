@@ -9,35 +9,35 @@ import { formatMessageDateShort } from "@/services/formate-date";
 interface Props {
     online?: boolean;
     conversations: UserGroup;
-    selectedConversations: UserGroup;
+    // selectedConversations: UserGroup;
 }
 
 export const ConversationItem = ({
     online,
     conversations,
-    selectedConversations,
-}: Props) => {
+}: // selectedConversations,
+Props) => {
     const page = usePage<PageProps>().props;
     const currentUser = page.auth.user;
 
     let classes = "border-transparent";
 
-    if (selectedConversations) {
-        if (
-            !selectedConversations.is_group &&
-            !conversations.is_group &&
-            selectedConversations.id == conversations.id
-        ) {
-            classes = "border-blue-500 bg-black/20";
-        }
-        if (
-            selectedConversations.is_group &&
-            conversations.is_group &&
-            selectedConversations.id == conversations.id
-        ) {
-            classes = "border-blue-500 bg-black/20";
-        }
-    }
+    // if (selectedConversations) {
+    //     if (
+    //         !selectedConversations.is_group &&
+    //         !conversations.is_group &&
+    //         selectedConversations.id == conversations.id
+    //     ) {
+    //         classes = "border-blue-500 bg-black/20";
+    //     }
+    //     if (
+    //         selectedConversations.is_group &&
+    //         conversations.is_group &&
+    //         selectedConversations.id == conversations.id
+    //     ) {
+    //         classes = "border-blue-500 bg-black/20";
+    //     }
+    // }
 
     return (
         <Link

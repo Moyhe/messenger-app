@@ -206,7 +206,7 @@ const ChatLayout = ({ children }: Props) => {
                                     }${conversation.id}`}
                                     online={!!isUserOnline(conversation.id)}
                                     conversations={conversation}
-                                    selectedConversations={selectedConversation}
+                                    // selectedConversations={selectedConversation}
                                 />
                             ))}
                     </div>
