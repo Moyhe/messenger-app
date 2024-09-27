@@ -19,7 +19,6 @@ const UserOptionsDropdown = ({ conversations }: Props) => {
     const { emit } = useEventBusContext();
 
     const changeUserRole = () => {
-        console.log("change user role");
         if (!conversations.is_user) return;
 
         axios
@@ -32,7 +31,6 @@ const UserOptionsDropdown = ({ conversations }: Props) => {
     };
 
     const onBlockUser = () => {
-        console.log("Block User");
         if (!conversations.is_user) return;
 
         axios
@@ -45,7 +43,7 @@ const UserOptionsDropdown = ({ conversations }: Props) => {
     };
 
     return (
-        <div>
+        <div onClick={(e) => e.preventDefault()}>
             <Menu as="div" className="relative inline-block text-left">
                 <div>
                     <Menu.Button className="flex justify-center items-center w-8 h-8 rounded-full hover:bg-black/40">
