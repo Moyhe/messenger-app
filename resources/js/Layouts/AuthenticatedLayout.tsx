@@ -3,7 +3,6 @@ import NewUserModal from "@/Components/App/NewUserModal";
 import Toast from "@/Components/App/Toast";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
-import Modal from "@/Components/Modal";
 import NavLink from "@/Components/NavLink";
 import PrimaryButton from "@/Components/PrimaryButton";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
@@ -12,7 +11,7 @@ import { useEventBusContext } from "@/EventBus";
 import { PageProps } from "@/types";
 import { ConversationProps } from "@/types/conversations";
 import GroupDelete from "@/types/group.delete";
-import BroadCastMessage, { Messages } from "@/types/messages";
+import BroadCastMessage from "@/types/messages";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
@@ -35,7 +34,6 @@ export default function Authenticated({
     useEffect(() => {
         conversations.forEach((conversation) => {
             let channel = `message.group.${conversation.id}`;
-
             if (conversation.is_user) {
                 channel = `message.user.${[user.id, conversation.id]
                     .sort((a, b) => a - b)
@@ -43,11 +41,8 @@ export default function Authenticated({
             }
 
             echo.private(channel)
-                .error((error: Error) => {
-                    console.log(error.message);
-                })
                 .listen("SocketMessage", (e: BroadCastMessage) => {
-                    console.log("SocketMessage", e.message);
+                    console.log("SocketMessage received:", e.message);
 
                     emit("message.created", e.message);
 
@@ -64,9 +59,12 @@ export default function Authenticated({
                                 e.message.attachments.length == 1
                                     ? "an attachment"
                                     : e.message.attachments.length +
-                                      "attchaments"
+                                      " attachments"
                             }`,
                     });
+                })
+                .error((error: Error) => {
+                    console.log(error.message);
                 });
 
             if (conversation.is_group) {
@@ -75,7 +73,7 @@ export default function Authenticated({
                         emit("group.deleted", { id: e.id, name: e.name });
                     })
                     .error((error: Error) => {
-                        console.log(error.message);
+                        console.log("Echo error (group)", error.message);
                     });
             }
         });
@@ -83,13 +81,11 @@ export default function Authenticated({
         return () => {
             conversations.forEach((conversation) => {
                 let channel = `message.group.${conversation.id}`;
-
                 if (conversation.is_user) {
                     channel = `message.user.${[user.id, conversation.id]
                         .sort((a, b) => a - b)
                         .join("-")}`;
                 }
-
                 echo.leave(channel);
 
                 if (conversation.is_group) {

@@ -53,18 +53,6 @@ class Conversation extends Model
         }));
     }
 
-
-    public static function selectedConversationsForSidebar(User $user)
-    {
-
-        $users = User::getUserExceptUser($user);
-        $groups = Group::getGroupForUser($user);
-
-
-        return $groups->isNotEmpty() ? $groups : $users;
-    }
-
-
     public static function updateConversationWithMessage($user_id1, $user_id2, $message)
     {
         $conversation = Conversation::query()
