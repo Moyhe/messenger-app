@@ -67,8 +67,9 @@ Access to the docker container
 1. Registration & Login & profile
 2. chat with users and groups
 3. block and unblock users
-4. add admins, groups and users
+4. perform CRUD operations for admins, groups and users
 5. reverb for real time messaging
 6. sendning emojis, attachments, voice message and images
 7. searcing for users and groups
-8. load older messages when scrolling to the stop
+8. Load older messages with infinite scroll loading
+9. Deleting your own sent messages
